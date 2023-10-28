@@ -22,9 +22,6 @@ pipeline {
             }
         }
         stage('Deploy') {
-            when {
-                expression { currentBuild.rawBuild.causes.any { it instanceof hudson.model.Cause$UserIdCause } }
-            }
             steps {
                 sh './jenkins/scripts/deliver.sh'
                 input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)'
