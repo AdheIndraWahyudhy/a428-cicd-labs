@@ -27,6 +27,13 @@ pipeline {
                 input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)'
                 sh './jenkins/scripts/kill.sh'
             }
+            post {
+                success {
+                    script {
+                        sleep(time: 60, unit: 'SECONDS')
+                    }
+                }
+            }
         }
     }
 }
