@@ -18,20 +18,12 @@ pipeline {
         }
         stage('Manual Approval') {
             steps {
-                script {
-                    def userInput = input(message: 'Lanjutkan ke tahap deploy? (Klik "Proceed" untuk mengakhiri)', parameters: [booleanParam(defaultValue: true, description: 'Proceed to Deploy', name: 'Deploy')])
-                    if (userInput == true) {
-                        currentBuild.result = 'SUCCESS'
-                    } else {
-                        currentBuild.result = 'ABORTED'
-                        error("Pipeline dihentikan oleh pengguna.")
-                    }
-                }
+                input message: 'Lanjutkan ke tahap deploy? (Klik "Proceed" untuk mengakhiri)'
             }
         }
         stage('Deploy') {
             when {
-                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+                expression { currentBuild.rawBuild.causes.any { it instanceof hudson.model.Cause$UserIdCause } }
             }
             steps {
                 sh './jenkins/scripts/deliver.sh'
